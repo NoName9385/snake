@@ -5,13 +5,12 @@ window.initGame = (React, assetsUrl) => {
   const { useState, useEffect } = React;
 
   const SnakeGame = () => {
+    const boardSize = 20; // Define the board size (20x20 grid)
     const [snake, setSnake] = useState([[0, 0]]);
     const [direction, setDirection] = useState('RIGHT');
     const [food, setFood] = useState(generateRandomFood());
     const [gameOver, setGameOver] = useState(false);
     const [score, setScore] = useState(0);
-
-    const boardSize = 20; // Define the board size (20x20 grid)
 
     function generateRandomFood() {
       const x = Math.floor(Math.random() * boardSize);
