@@ -11,7 +11,9 @@ window.initGame = (React, assetsUrl) => {
     const [food, setFood] = useState(generateRandomFood());
     const [gameOver, setGameOver] = useState(false);
     const [score, setScore] = useState(0);
-    const [canTurn, setCanTurn] = useState(true); // New state to control turning
+    const [canTurn, setCanTurn] = useState(true); // Control turning
+    const [speed, setSpeed] = useState(500); // Start speed (milliseconds)
+    const [startTime, setStartTime] = useState(null); // Track game start time
 
     function generateRandomFood() {
       const x = Math.floor(Math.random() * boardSize);
@@ -27,25 +29,25 @@ window.initGame = (React, assetsUrl) => {
           case 'w':
             if (direction !== 'DOWN') {
               setDirection('UP');
-              setCanTurn(false); // Disable turning until the snake moves
+              setCanTurn(false);
             }
             break;
           case 's':
             if (direction !== 'UP') {
               setDirection('DOWN');
-              setCanTurn(false); // Disable turning until the snake moves
+              setCanTurn(false);
             }
             break;
           case 'a':
             if (direction !== 'RIGHT') {
               setDirection('LEFT');
-              setCanTurn(false); // Disable turning until the snake moves
+              setCanTurn(false);
             }
             break;
           case 'd':
             if (direction !== 'LEFT') {
               setDirection('RIGHT');
-              setCanTurn(false); // Disable turning until the snake moves
+              setCanTurn(false);
             }
             break;
           default:
@@ -60,13 +62,30 @@ window.initGame = (React, assetsUrl) => {
     }, [direction, canTurn]);
 
     useEffect(() => {
+      if (gameOver) return; // Don't run if game is over
+
       const interval = setInterval(() => {
-        if (!gameOver) {
-          moveSnake();
-        }
-      }, 200);
+        moveSnake();
+      }, speed);
+
       return () => clearInterval(interval);
-    }, [snake, direction, gameOver]);
+    }, [snake, direction, gameOver, speed]);
+
+    useEffect(() => {
+      if (!startTime) setStartTime(Date.now());
+
+      const increaseSpeed = () => {
+        if (!gameOver) {
+          const elapsedTime = Date.now() - startTime;
+          const newSpeed = Math.max(100, 500 - Math.floor(elapsedTime / 10000) * 50); // Speed increases every 10 seconds, min speed 100ms
+          setSpeed(newSpeed);
+        }
+      };
+
+      const speedInterval = setInterval(increaseSpeed, 1000); // Check every second
+
+      return () => clearInterval(speedInterval);
+    }, [startTime, gameOver]);
 
     const moveSnake = () => {
       const newSnake = [...snake];
@@ -122,7 +141,9 @@ window.initGame = (React, assetsUrl) => {
       setFood(generateRandomFood());
       setGameOver(false);
       setScore(0);
-      setCanTurn(true); // Reset turn ability
+      setCanTurn(true);
+      setSpeed(500); // Reset speed
+      setStartTime(null); // Reset start time
     };
 
     return React.createElement(
@@ -151,3 +172,4 @@ window.initGame = (React, assetsUrl) => {
 
   return () => React.createElement(SnakeGame, { assetsUrl: assetsUrl });
 };
+
