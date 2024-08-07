@@ -1,80 +1,136 @@
 // This would be stored in the 'src' folder of the GitHub repository
 // snake.js
 
-// 建立新的 canvas 元素並添加到 DOM
-const gameCanvas = document.createElement("canvas");
-gameCanvas.id = "gameCanvas";
-gameCanvas.width = 400;
-gameCanvas.height = 400;
-document.body.appendChild(gameCanvas);
+window.initGame = (React, assetsUrl) => {
+  const { useState, useEffect } = React;
 
-// 獲取 2D 渲染上下文
-const ctx = gameCanvas.getContext("2d");
+  const SnakeGame = () => {
+    const [snake, setSnake] = useState([[0, 0]]);
+    const [direction, setDirection] = useState('RIGHT');
+    const [food, setFood] = useState(generateRandomFood());
+    const [gameOver, setGameOver] = useState(false);
+    const [score, setScore] = useState(0);
 
-const box = 20; // 每個方塊的大小
-let snake = [{ x: 9 * box, y: 9 * box }]; // 蛇的初始位置
-let direction = "RIGHT"; // 蛇的初始方向
-let food = { x: Math.floor(Math.random() * 20) * box, y: Math.floor(Math.random() * 20) * box }; // 食物的初始位置
+    const boardSize = 20; // Define the board size (20x20 grid)
 
-document.addEventListener("keydown", directionControl);
-
-function directionControl(event) {
-    if (event.keyCode == 37 && direction != "RIGHT") {
-        direction = "LEFT";
-    } else if (event.keyCode == 38 && direction != "DOWN") {
-        direction = "UP";
-    } else if (event.keyCode == 39 && direction != "LEFT") {
-        direction = "RIGHT";
-    } else if (event.keyCode == 40 && direction != "UP") {
-        direction = "DOWN";
+    function generateRandomFood() {
+      const x = Math.floor(Math.random() * boardSize);
+      const y = Math.floor(Math.random() * boardSize);
+      return [x, y];
     }
-}
 
-function collision(head, array) {
-    for (let i = 0; i < array.length; i++) {
-        if (head.x === array[i].x && head.y === array[i].y) {
-            return true;
+    useEffect(() => {
+      const handleKeyPress = (e) => {
+        switch (e.key) {
+          case 'w':
+            if (direction !== 'DOWN') setDirection('UP');
+            break;
+          case 's':
+            if (direction !== 'UP') setDirection('DOWN');
+            break;
+          case 'a':
+            if (direction !== 'RIGHT') setDirection('LEFT');
+            break;
+          case 'd':
+            if (direction !== 'LEFT') setDirection('RIGHT');
+            break;
+          default:
+            break;
         }
-    }
-    return false;
-}
+      };
 
-function draw() {
-    ctx.fillStyle = "lightgreen";
-    ctx.fillRect(0, 0, gameCanvas.width, gameCanvas.height);
+      document.addEventListener('keydown', handleKeyPress);
+      return () => {
+        document.removeEventListener('keydown', handleKeyPress);
+      };
+    }, [direction]);
 
-    for (let i = 0; i < snake.length; i++) {
-        ctx.fillStyle = (i === 0) ? "green" : "white";
-        ctx.fillRect(snake[i].x, snake[i].y, box, box);
-        ctx.strokeStyle = "black";
-        ctx.strokeRect(snake[i].x, snake[i].y, box, box);
-    }
+    useEffect(() => {
+      const interval = setInterval(() => {
+        if (!gameOver) {
+          moveSnake();
+        }
+      }, 200);
+      return () => clearInterval(interval);
+    }, [snake, direction, gameOver]);
 
-    ctx.fillStyle = "red";
-    ctx.fillRect(food.x, food.y, box, box);
+    const moveSnake = () => {
+      const newSnake = [...snake];
+      const head = newSnake[0];
+      let newHead;
 
-    let snakeX = snake[0].x;
-    let snakeY = snake[0].y;
+      switch (direction) {
+        case 'UP':
+          newHead = [head[0] - 1, head[1]];
+          break;
+        case 'DOWN':
+          newHead = [head[0] + 1, head[1]];
+          break;
+        case 'LEFT':
+          newHead = [head[0], head[1] - 1];
+          break;
+        case 'RIGHT':
+          newHead = [head[0], head[1] + 1];
+          break;
+        default:
+          return;
+      }
 
-    if (direction === "LEFT") snakeX -= box;
-    if (direction === "UP") snakeY -= box;
-    if (direction === "RIGHT") snakeX += box;
-    if (direction === "DOWN") snakeY += box;
+      // Check for collisions with the wall or itself
+      if (
+        newHead[0] < 0 ||
+        newHead[0] >= boardSize ||
+        newHead[1] < 0 ||
+        newHead[1] >= boardSize ||
+        newSnake.some(segment => segment[0] === newHead[0] && segment[1] === newHead[1])
+      ) {
+        setGameOver(true);
+        return;
+      }
 
-    if (snakeX === food.x && snakeY === food.y) {
-        food = { x: Math.floor(Math.random() * 20) * box, y: Math.floor(Math.random() * 20) * box };
-    } else {
-        snake.pop();
-    }
+      newSnake.unshift(newHead); // Add new head to the snake
 
-    let newHead = { x: snakeX, y: snakeY };
+      // Check if the snake has eaten the food
+      if (newHead[0] === food[0] && newHead[1] === food[1]) {
+        setScore(score + 10);
+        setFood(generateRandomFood());
+      } else {
+        newSnake.pop(); // Remove the tail segment if no food eaten
+      }
 
-    if (snakeX < 0 || snakeX >= gameCanvas.width || snakeY < 0 || snakeY >= gameCanvas.height || collision(newHead, snake)) {
-        clearInterval(game);
-        console.error("Game Over!");
-    }
+      setSnake(newSnake);
+    };
 
-    snake.unshift(newHead);
-}
+    const resetGame = () => {
+      setSnake([[0, 0]]);
+      setDirection('RIGHT');
+      setFood(generateRandomFood());
+      setGameOver(false);
+      setScore(0);
+    };
 
-let game = setInterval(draw, 100);
+    return React.createElement(
+      'div',
+      { className: "snake-game" },
+      React.createElement('h2', null, "Snake Game"),
+      React.createElement('div', { className: 'board' }, 
+        Array.from({ length: boardSize }).map((_, row) =>
+          React.createElement('div', { key: row, className: 'row' },
+            Array.from({ length: boardSize }).map((_, col) => {
+              const isSnake = snake.some(segment => segment[0] === row && segment[1] === col);
+              const isFood = food[0] === row && food[1] === col;
+              return React.createElement('div', {
+                key: col,
+                className: `cell ${isSnake ? 'snake' : ''} ${isFood ? 'food' : ''}`
+              });
+            })
+          )
+        )
+      ),
+      gameOver && React.createElement('p', null, "Game Over! Your score: " + score),
+      React.createElement('button', { onClick: resetGame }, "Reset")
+    );
+  };
+
+  return () => React.createElement(SnakeGame, { assetsUrl: assetsUrl });
+};
