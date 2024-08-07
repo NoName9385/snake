@@ -11,6 +11,7 @@ window.initGame = (React, assetsUrl) => {
     const [food, setFood] = useState(generateRandomFood());
     const [gameOver, setGameOver] = useState(false);
     const [score, setScore] = useState(0);
+    const [canTurn, setCanTurn] = useState(true); // New state to control turning
 
     function generateRandomFood() {
       const x = Math.floor(Math.random() * boardSize);
@@ -20,18 +21,32 @@ window.initGame = (React, assetsUrl) => {
 
     useEffect(() => {
       const handleKeyPress = (e) => {
+        if (!canTurn) return; // Prevent turning if the snake has just moved
+
         switch (e.key) {
           case 'w':
-            if (direction !== 'DOWN') setDirection('UP');
+            if (direction !== 'DOWN') {
+              setDirection('UP');
+              setCanTurn(false); // Disable turning until the snake moves
+            }
             break;
           case 's':
-            if (direction !== 'UP') setDirection('DOWN');
+            if (direction !== 'UP') {
+              setDirection('DOWN');
+              setCanTurn(false); // Disable turning until the snake moves
+            }
             break;
           case 'a':
-            if (direction !== 'RIGHT') setDirection('LEFT');
+            if (direction !== 'RIGHT') {
+              setDirection('LEFT');
+              setCanTurn(false); // Disable turning until the snake moves
+            }
             break;
           case 'd':
-            if (direction !== 'LEFT') setDirection('RIGHT');
+            if (direction !== 'LEFT') {
+              setDirection('RIGHT');
+              setCanTurn(false); // Disable turning until the snake moves
+            }
             break;
           default:
             break;
@@ -42,7 +57,7 @@ window.initGame = (React, assetsUrl) => {
       return () => {
         document.removeEventListener('keydown', handleKeyPress);
       };
-    }, [direction]);
+    }, [direction, canTurn]);
 
     useEffect(() => {
       const interval = setInterval(() => {
@@ -98,6 +113,7 @@ window.initGame = (React, assetsUrl) => {
       }
 
       setSnake(newSnake);
+      setCanTurn(true); // Allow turning again after the snake has moved
     };
 
     const resetGame = () => {
@@ -106,6 +122,7 @@ window.initGame = (React, assetsUrl) => {
       setFood(generateRandomFood());
       setGameOver(false);
       setScore(0);
+      setCanTurn(true); // Reset turn ability
     };
 
     return React.createElement(
