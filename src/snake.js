@@ -1,97 +1,48 @@
 // This would be stored in the 'src' folder of the GitHub repository
 // snake.js
 
-window.initGame = (React, assetsUrl) => {
-  const { useState, useEffect } = React;
-
-  const SnakeGame = () => {
+const SnakeGame = () => {
     const boardSize = 20; // Define the board size (20x20 grid)
     const [snake, setSnake] = useState([[0, 0]]);
     const [direction, setDirection] = useState('RIGHT');
     const [food, setFood] = useState(generateRandomFood());
+    const [foodImage, setFoodImage] = useState(selectRandomFoodImage());
     const [gameOver, setGameOver] = useState(false);
     const [score, setScore] = useState(0);
-    const [canTurn, setCanTurn] = useState(true); // Control turning
-    const [speed, setSpeed] = useState(500); // Start speed (milliseconds)
-    const [startTime, setStartTime] = useState(null); // Track game start time
-
+    const [canTurn, setCanTurn] = useState(true);
+    const [speed, setSpeed] = useState(500);
+    const [startTime, setStartTime] = useState(null);
+  
+    const foodImages = [
+      `apple.png`, // Replace with actual image paths
+      `banana.png`,
+      `strawberry.png`
+    ];
+  
     function generateRandomFood() {
       const x = Math.floor(Math.random() * boardSize);
       const y = Math.floor(Math.random() * boardSize);
       return [x, y];
     }
-
+  
+    function selectRandomFoodImage() {
+      const randomIndex = Math.floor(Math.random() * foodImages.length);
+      return foodImages[randomIndex];
+    }
+  
     useEffect(() => {
-      const handleKeyPress = (e) => {
-        if (!canTurn) return; // Prevent turning if the snake has just moved
-
-        switch (e.key) {
-          case 'w':
-            if (direction !== 'DOWN') {
-              setDirection('UP');
-              setCanTurn(false);
-            }
-            break;
-          case 's':
-            if (direction !== 'UP') {
-              setDirection('DOWN');
-              setCanTurn(false);
-            }
-            break;
-          case 'a':
-            if (direction !== 'RIGHT') {
-              setDirection('LEFT');
-              setCanTurn(false);
-            }
-            break;
-          case 'd':
-            if (direction !== 'LEFT') {
-              setDirection('RIGHT');
-              setCanTurn(false);
-            }
-            break;
-          default:
-            break;
-        }
-      };
-
-      document.addEventListener('keydown', handleKeyPress);
-      return () => {
-        document.removeEventListener('keydown', handleKeyPress);
-      };
-    }, [direction, canTurn]);
-
-    useEffect(() => {
-      if (gameOver) return; // Don't run if game is over
-
       const interval = setInterval(() => {
         moveSnake();
       }, speed);
-
+  
       return () => clearInterval(interval);
     }, [snake, direction, gameOver, speed]);
-
-    useEffect(() => {
-      if (!startTime) setStartTime(Date.now());
-
-      const increaseSpeed = () => {
-        if (!gameOver) {
-          const elapsedTime = Date.now() - startTime;
-          const newSpeed = Math.max(100, 500 - Math.floor(elapsedTime / 10000) * 50); // Speed increases every 10 seconds, min speed 100ms
-          setSpeed(newSpeed);
-        }
-      };
-
-      const speedInterval = setInterval(increaseSpeed, 1000); // Check every second
-
-      return () => clearInterval(speedInterval);
-    }, [startTime, gameOver]);
-
+  
     const moveSnake = () => {
       const newSnake = [...snake];
       const head = newSnake[0];
       let newHead;
-
+  
       switch (direction) {
         case 'UP':
           newHead = [head[0] - 1, head[1]];
@@ -108,8 +59,8 @@ window.initGame = (React, assetsUrl) => {
         default:
           return;
       }
-
-      // Check for collisions with the wall or itself
+  
+      // Check for collisions with walls or itself
       if (
         newHead[0] < 0 ||
         newHead[0] >= boardSize ||
@@ -120,32 +71,22 @@ window.initGame = (React, assetsUrl) => {
         setGameOver(true);
         return;
       }
-
+  
       newSnake.unshift(newHead); // Add new head to the snake
-
+  
       // Check if the snake has eaten the food
       if (newHead[0] === food[0] && newHead[1] === food[1]) {
         setScore(score + 10);
-        setFood(generateRandomFood());
+        setFood(generateRandomFood()); // Generate new food position
+        setFoodImage(selectRandomFoodImage()); // Select a new food image
       } else {
         newSnake.pop(); // Remove the tail segment if no food eaten
       }
-
+  
       setSnake(newSnake);
       setCanTurn(true); // Allow turning again after the snake has moved
     };
-
-    const resetGame = () => {
-      setSnake([[0, 0]]);
-      setDirection('RIGHT');
-      setFood(generateRandomFood());
-      setGameOver(false);
-      setScore(0);
-      setCanTurn(true);
-      setSpeed(500); // Reset speed
-      setStartTime(null); // Reset start time
-    };
-
+  
     return React.createElement(
       'div',
       { className: "game-container" },
@@ -158,7 +99,13 @@ window.initGame = (React, assetsUrl) => {
               const isFood = food[0] === row && food[1] === col;
               return React.createElement('div', {
                 key: col,
-                className: `cell ${isSnake ? 'snake' : ''} ${isFood ? 'food' : ''}`
+                className: `cell ${isSnake ? 'snake' : ''} ${isFood ? 'food' : ''}`,
+                style: { 
+                  backgroundImage: isFood ? `url(${foodImage})` : 'none',
+                  backgroundSize: 'contain',
+                  backgroundRepeat: 'no-repeat',
+                  backgroundPosition: 'center' 
+                }
               });
             })
           )
@@ -169,7 +116,4 @@ window.initGame = (React, assetsUrl) => {
       React.createElement('button', { onClick: resetGame }, "Reset")
     );
   };
-
-  return () => React.createElement(SnakeGame, { assetsUrl: assetsUrl });
-};
 
