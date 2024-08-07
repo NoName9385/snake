@@ -18,9 +18,9 @@ window.initGame = (React, assetsUrl) => {
 
     // Array of food images
     const foodImages = [
-      `apple.png`, // Replace with actual image paths
-      `banana.png`,
-      `strawberry.png`
+      `${assetsUrl}/apple.png`, // Replace with actual image paths
+      `${assetsUrl}/banana.png`,
+      `${assetsUrl}/strawberry.png`
     ];
 
     function generateRandomFood() {
