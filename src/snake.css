@@ -1,6 +1,15 @@
 /* snake.css */
 .snake-game {
+    position: relative;
     text-align: center;
+}
+
+.score {
+    position: absolute;
+    top: 10px; /* Adjust as necessary */
+    right: 10px; /* Adjust as necessary */
+    font-size: 20px; /* Adjust font size as needed */
+    color: black; /* Change color as desired */
 }
 
 .board {
