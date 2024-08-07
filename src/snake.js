@@ -112,6 +112,7 @@ window.initGame = (React, assetsUrl) => {
       'div',
       { className: "snake-game" },
       React.createElement('h2', null, "Snake Game"),
+      React.createElement('div', { className: 'score', style: { position: 'absolute', right: '10px', top: '10px', fontSize: '16px' } }, "Score: " + score),
       React.createElement('div', { className: 'board' }, 
         Array.from({ length: boardSize }).map((_, row) =>
           React.createElement('div', { key: row, className: 'row' },
