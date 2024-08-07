@@ -29,6 +29,7 @@ window.initGame = (React, assetsUrl) => {
       return [x, y];
     }
 
+    // Move this function below the foodImages declaration
     function selectRandomFoodImage() {
       const randomIndex = Math.floor(Math.random() * foodImages.length);
       return foodImages[randomIndex];
@@ -191,4 +192,3 @@ window.initGame = (React, assetsUrl) => {
 
   return () => React.createElement(SnakeGame, { assetsUrl: assetsUrl });
 };
-
