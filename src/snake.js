@@ -9,7 +9,7 @@ window.initGame = (React, assetsUrl) => {
     const [snake, setSnake] = useState([[0, 0]]);
     const [direction, setDirection] = useState('RIGHT');
     const [food, setFood] = useState(generateRandomFood());
-    const [foodImage, setFoodImage] = useState(selectRandomFoodImage()); // New state for food image
+    const [foodImage, setFoodImage] = useState(''); // Initialize foodImage as an empty string
     const [gameOver, setGameOver] = useState(false);
     const [score, setScore] = useState(0);
     const [canTurn, setCanTurn] = useState(true);
@@ -18,10 +18,15 @@ window.initGame = (React, assetsUrl) => {
 
     // Array of food images
     const foodImages = [
-      `${assetsUrl}/apple.png`, // Replace with actual image paths
+      `${assetsUrl}/apple.png`,
       `${assetsUrl}/banana.png`,
       `${assetsUrl}/strawberry.png`
     ];
+
+    const selectRandomFoodImage = () => {
+      const randomIndex = Math.floor(Math.random() * foodImages.length);
+      return foodImages[randomIndex];
+    };
 
     function generateRandomFood() {
       const x = Math.floor(Math.random() * boardSize);
@@ -29,11 +34,10 @@ window.initGame = (React, assetsUrl) => {
       return [x, y];
     }
 
-    // Move this function below the foodImages declaration
-    function selectRandomFoodImage() {
-      const randomIndex = Math.floor(Math.random() * foodImages.length);
-      return foodImages[randomIndex];
-    }
+    useEffect(() => {
+      // Select a random food image when the component mounts
+      setFoodImage(selectRandomFoodImage());
+    }, []);
 
     useEffect(() => {
       const handleKeyPress = (e) => {
@@ -123,7 +127,6 @@ window.initGame = (React, assetsUrl) => {
           return;
       }
 
-      // Check for collisions with the wall or itself
       if (
         newHead[0] < 0 ||
         newHead[0] >= boardSize ||
@@ -135,15 +138,14 @@ window.initGame = (React, assetsUrl) => {
         return;
       }
 
-      newSnake.unshift(newHead); // Add new head to the snake
+      newSnake.unshift(newHead);
 
-      // Check if the snake has eaten the food
       if (newHead[0] === food[0] && newHead[1] === food[1]) {
         setScore(score + 10);
         setFood(generateRandomFood());
         setFoodImage(selectRandomFoodImage()); // Select a new random food image
       } else {
-        newSnake.pop(); // Remove the tail segment if no food eaten
+        newSnake.pop();
       }
 
       setSnake(newSnake);
