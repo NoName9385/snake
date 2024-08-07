@@ -112,7 +112,7 @@ window.initGame = (React, assetsUrl) => {
       'div',
       { className: "snake-game" },
       React.createElement('h2', null, "Snake Game"),
-      React.createElement('div', { className: 'board', style: { position: 'relative' } }, 
+      React.createElement('div', { className: 'board' }, 
         Array.from({ length: boardSize }).map((_, row) =>
           React.createElement('div', { key: row, className: 'row' },
             Array.from({ length: boardSize }).map((_, col) => {
@@ -124,10 +124,10 @@ window.initGame = (React, assetsUrl) => {
               });
             })
           )
-        ),
-        // Displaying the score on the game board
-        React.createElement('div', { className: 'score', style: { position: 'absolute', right: '10px', top: '10px', fontSize: '16px', color: 'white' } }, "Score: " + score)
+        )
       ),
+      // Displaying the score below the game board
+      React.createElement('div', { className: 'score', style: { marginTop: '10px', fontSize: '16px', color: 'black' } }, "Score: " + score),
       gameOver && React.createElement('p', null, "Game Over! Your score: " + score),
       React.createElement('button', { onClick: resetGame }, "Reset")
     );
