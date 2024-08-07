@@ -1,5 +1,7 @@
 /* snake.css */
-
+.shake{
+text-align: center;
+}
 .score {
   color: black; /* Change color as needed */
   font-weight: bold;
