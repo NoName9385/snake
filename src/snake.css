@@ -1,33 +1,75 @@
 /* snake.css */
-.shake {
-text-align: center;
-align-items: center;
-}
-.score {
-  color: black; /* Change color as needed */
-  font-weight: bold;
-}
-
-.board {
-    display: inline-block;
-    border: 2px solid black;
-    margin: 20px;
-}
-
-.row {
-    display: flex;
-}
-
-.cell {
-    width: 20px;
-    height: 20px;
-    border: 1px solid lightgray;
-}
-
 .snake {
-    background-color: green;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #f0f0f0;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  max-width: 400px;
+  margin: auto;
 }
 
-.food {
-    background-color: red;
+/* Title styles */
+h2 {
+  font-family: 'Arial', sans-serif;
+  color: #333;
 }
+
+/* Board styles */
+.board {
+  display: grid;
+  grid-template-columns: repeat(20, 20px); /* 20 columns */
+  grid-template-rows: repeat(20, 20px); /* 20 rows */
+  gap: 1px; /* Space between cells */
+  background-color: #ccc;
+}
+
+/* Cell styles */
+.cell {
+  width: 20px;
+  height: 20px;
+  background-color: #fff;
+  border: 1px solid #ddd;
+}
+
+/* Snake styles */
+.snake {
+  background-color: #4caf50; /* Green for the snake */
+}
+
+/* Food styles */
+.food {
+  background-color: #ff5722; /* Orange for the food */
+}
+
+/* Score styles */
+.score {
+  font-family: 'Arial', sans-serif;
+  color: #333;
+  font-size: 18px;
+}
+
+/* Game Over message styles */
+p {
+  font-size: 16px;
+  color: red;
+}
+
+/* Button styles */
+button {
+  padding: 10px 15px;
+  background-color: #007bff; /* Blue background */
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+button:hover {
+  background-color: #0056b3; /* Darker blue on hover */
+}
+
+
