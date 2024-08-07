@@ -1,14 +1,15 @@
 // This would be stored in the 'src' folder of the GitHub repository
 // snake.js
 
-// 創建畫布元素
-const canvas = document.createElement("canvas");
-canvas.id = "gameCanvas";
-canvas.width = 400;
-canvas.height = 400;
-document.body.appendChild(canvas); // 將畫布添加到 body 中
+// 建立新的 canvas 元素並添加到 DOM
+const gameCanvas = document.createElement("canvas");
+gameCanvas.id = "gameCanvas";
+gameCanvas.width = 400;
+gameCanvas.height = 400;
+document.body.appendChild(gameCanvas);
 
-const ctx = canvas.getContext("2d");
+// 獲取 2D 渲染上下文
+const ctx = gameCanvas.getContext("2d");
 
 const box = 20; // 每個方塊的大小
 let snake = [{ x: 9 * box, y: 9 * box }]; // 蛇的初始位置
@@ -40,7 +41,7 @@ function collision(head, array) {
 
 function draw() {
     ctx.fillStyle = "lightgreen";
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.fillRect(0, 0, gameCanvas.width, gameCanvas.height);
 
     for (let i = 0; i < snake.length; i++) {
         ctx.fillStyle = (i === 0) ? "green" : "white";
@@ -68,7 +69,7 @@ function draw() {
 
     let newHead = { x: snakeX, y: snakeY };
 
-    if (snakeX < 0 || snakeX >= canvas.width || snakeY < 0 || snakeY >= canvas.height || collision(newHead, snake)) {
+    if (snakeX < 0 || snakeX >= gameCanvas.width || snakeY < 0 || snakeY >= gameCanvas.height || collision(newHead, snake)) {
         clearInterval(game);
         alert("遊戲結束！"); // 遊戲結束提示
     }
