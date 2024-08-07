@@ -186,7 +186,9 @@ return React.createElement(
       )
     )
   ),
-  React.createElement('div', { className: 'score', style: { marginTop: '10px', fontSize: '20px', color: 'black', textAlign: 'center' } }, "Score: " + score),
+  React.createElement('div', { className: 'score', style: { marginTop: '10px', fontSize: '16px', color: 'black' } }, "Score: " + score),
+  // Added instant score display
+  React.createElement('div', { style: { marginTop: '5px', fontSize: '14px', color: 'gray' } }, "Instant Score: " + score),
   gameOver && React.createElement('p', null, "Game Over! Your score: " + score),
   React.createElement('button', { onClick: resetGame }, "Reset")
 );
