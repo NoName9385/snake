@@ -1,6 +1,7 @@
 /* snake.css */
 .snake-game {
-  position: relative;
+    position: relative;
+    text-align: center;
 }
 .score {
   color: black; /* Change color as needed */
