@@ -71,7 +71,7 @@ function draw() {
 
     if (snakeX < 0 || snakeX >= gameCanvas.width || snakeY < 0 || snakeY >= gameCanvas.height || collision(newHead, snake)) {
         clearInterval(game);
-        alert("遊戲結束！"); // 遊戲結束提示
+        console.error("Game Over!");
     }
 
     snake.unshift(newHead);
