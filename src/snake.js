@@ -108,28 +108,28 @@ window.initGame = (React, assetsUrl) => {
       setScore(0);
     };
 
-    return React.createElement(
-      'div',
-      { className: "snake-game" },
-      React.createElement('h2', null, "Snake Game"),
-      React.createElement('div', { className: 'board' }, 
-        Array.from({ length: boardSize }).map((_, row) =>
-          React.createElement('div', { key: row, className: 'row' },
-            Array.from({ length: boardSize }).map((_, col) => {
-              const isSnake = snake.some(segment => segment[0] === row && segment[1] === col);
-              const isFood = food[0] === row && food[1] === col;
-              return React.createElement('div', {
-                key: col,
-                className: `cell ${isSnake ? 'snake' : ''} ${isFood ? 'food' : ''}`
-              });
-            })
-          )
-        )
-      ),
-      gameOver && React.createElement('p', null, "Game Over! Your score: " + score),
-      React.createElement('button', { onClick: resetGame }, "Reset")
-    );
-  };
+return React.createElement(
+  'div',
+  { className: "snake-game" },
+  React.createElement('h2', null, "Snake Game"),
+  React.createElement('div', { className: 'score' }, `Score: ${score}`), // Score display
+  React.createElement('div', { className: 'board' }, 
+    Array.from({ length: boardSize }).map((_, row) =>
+      React.createElement('div', { key: row, className: 'row' },
+        Array.from({ length: boardSize }).map((_, col) => {
+          const isSnake = snake.some(segment => segment[0] === row && segment[1] === col);
+          const isFood = food[0] === row && food[1] === col;
+          return React.createElement('div', {
+            key: col,
+            className: `cell ${isSnake ? 'snake' : ''} ${isFood ? 'food' : ''}`
+          });
+        })
+      )
+    )
+  ),
+  gameOver && React.createElement('p', null, "Game Over! Your score: " + score),
+  React.createElement('button', { onClick: resetGame }, "Reset")
+);
 
   return () => React.createElement(SnakeGame, { assetsUrl: assetsUrl });
 };
