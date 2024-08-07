@@ -110,7 +110,7 @@ window.initGame = (React, assetsUrl) => {
 
     return React.createElement(
       'div',
-      { className: "snake-game" },
+      { className: "game-container" }, // Add a container class for centering
       React.createElement('h2', null, "Snake Game"),
       React.createElement('div', { className: 'board' }, 
         Array.from({ length: boardSize }).map((_, row) =>
