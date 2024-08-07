@@ -1,7 +1,5 @@
 /* snake.css */
-.snake-game {
-    text-align: center;
-}
+
 .score {
   color: black; /* Change color as needed */
   font-weight: bold;
