@@ -1,6 +1,10 @@
 /* snake.css */
 .snake-game {
-    text-align: center;
+  position: relative;
+}
+.score {
+  color: white; /* Change color as needed */
+  font-weight: bold;
 }
 
 .board {
