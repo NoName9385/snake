@@ -110,7 +110,7 @@ window.initGame = (React, assetsUrl) => {
 
     return React.createElement(
       'div',
-      { className: "game-container" }, // Add a container class for centering
+      { className: "game-container" },
       React.createElement('h2', null, "Snake Game"),
       React.createElement('div', { className: 'board' }, 
         Array.from({ length: boardSize }).map((_, row) =>
@@ -126,7 +126,6 @@ window.initGame = (React, assetsUrl) => {
           )
         )
       ),
-      // Displaying the score below the game board
       React.createElement('div', { className: 'score', style: { marginTop: '10px', fontSize: '16px', color: 'black' } }, "Score: " + score),
       gameOver && React.createElement('p', null, "Game Over! Your score: " + score),
       React.createElement('button', { onClick: resetGame }, "Reset")
